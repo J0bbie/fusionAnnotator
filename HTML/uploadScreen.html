@@ -1,0 +1,135 @@
+<!-- 
+#Author: 			Job van Riet
+#Date of creation:		19/9/12
+#Data of modification:		10/1/13
+#Known bugs:			Supporting evidence is currently not built in.
+#Function:			The page will be used to upload the breakpoints data into the breakpoint database. Additional supporting evidence, such as RNA-SEQ can also be uploaded. The user also has
+#				the option to adjust the search coordinates (Upstream/Downsteam and -/+ strand from the breakpoint) which will be used in the search for features in the Ensembl DB. (Default=5e6 bp)
+#				It uses methods from the fusionGetPipe01 module
+-->
+<HTML>
+<HEAD>
+<title>Upload Fusionpoints</title>
+<LINK href="VisualBrowserLayout.css" rel="stylesheet" type="text/css">
+<script>
+var supportStack = new Array(); 
+//Pushes a support file to the stack if it is a .BED, .GFF, .BAM or .WIG file.
+//Also check if it an http link
+function pushStack(newVal) {
+	if(newVal.match(/(\.bed$|\.wig$|\.gff$|\.bam$)/i))
+		if(newVal.match(/http:\/\//i))
+			supportStack.push(newVal);
+		else
+		 	alert("Not a supported file type! (Only .BED, .GFF , .WIG or .BAM in http links)");
+	else
+		alert("Not a supported file type! (Only .BED, .GFF , .WIG or .BAM in http links)");
+}
+
+//Removes the last element from the supportStack
+function popStack() {
+   supportStack.pop();
+}
+
+//Displays all the elements in a stack (Supportfiles)
+function showStack(theSelect){
+   theSelect.options.length = 0;
+   for (var i = 0; i < supportStack.length; i++){
+      var theOption = new Option(supportStack[i]);
+      theSelect.options[theSelect.options.length] = theOption;
+   }
+}
+
+function getElementsInString(){
+	document.getElementById('supportListHolder').value= supportStack.join();
+}
+
+</SCRIPT>
+
+</HEAD>	
+<BODY style="background-color:#eeeeee;">
+
+<div class="horizontalMenu">
+	<table >
+		<tr>
+			<td>Upload new breakpoints</td>
+			<td><a href="cgi-bin/viewExisting.pl">View existing breakpoints</a></td>
+		</tr>
+	</table>
+</div>
+
+<div class="content">
+	<p align="center">Upload new breakpoint coordinates based on the following tab-delimited format: <br>
+	<b>Chr1|Start|End|Chr2|Start|End|Orientation|Breaktype</b><br><i>or</i><br><b>Chr1|s1|e1|Chr2|s2|e2|Samples|Orientation|Count|Overlap|eDistance|rProbability|Type</b></p>
+	<!-- Form to upload data and choose options -->
+	<form action="../FusionAnnotator/cgi-bin/fusionPipe01.pl" method="post" enctype="multipart/form-data" name="breakForm" onsubmit='getElementsInString();'>
+		<label for="file">Choose breakpoint coordinates file:</label><input type="file" name="file" id="file" />
+		<br/>
+		<label for="supportFile">Link(s) of supporting BED|WIG|GFF|BAM files:</label><input type="text" name="supportFile" id="supportFile" />
+		<input type=button value="Push" onClick='pushStack(supportFile.value);supportFile.value=""; showStack(supportList)'/>
+		<br>
+		<label for="removeSupport">Remove last support link</label><input type=button value="Remove" onClick="popStack(); showStack(supportList)"/>
+		<br>
+		<label>Support files:</label>
+		<select name="supportList" size=4>
+		<option>List of selected support files</option>
+		</select>
+		<input type="hidden"  name="supportListHolder" id="supportListHolder"/>
+		<br>
+		<label for="species">Organism:</label>
+		<select name="species">
+		<option value="homo_sapiens">Homo sapiens</option>
+		<option value="danio_rerio">Danio rerio</option>
+		<!--<option value="rattus_norvegicus">Rattus norvegicus</option> -->
+		</select>
+		<br>                                                                                                                                                             
+		<label for="submit">Upload Fusionpoints </label><input type="submit" name="submit" value="Submit"/>
+		<!-- Search distance options -->
+		<p align="center"><b>Options: </b></p>
+		<div class="options" align="center">
+			<i>Search distances from fusionpoint in kb (Default = 20 kb)</i><br>
+			<label for="searchUp"><b>Upstream</b></label><input type="text" name="searchUp" value="20"/><br>
+			<label for="searchDown"><b>Downstream</b></label><input type="text" name="searchDown" value="20"/>
+			<br>
+		</div>
+		<br>
+		<!-- Extra options for genes and domains of interest -->
+		<div class="options" align="center">
+			<i>Define genes, domains and reg. elements that are given extra importance in the pre-selection of fusionpoints (Reg. elements are somewhat slow to search thanks to the abundance of DNaseI activity)<br>
+			By default it searches everything except reg. elements, the selection will also not make a preference for certain genes and domains<br>
+			Use ; as delimiter, e.g. P53;RAD51;PDGF</i><br>
+			<label for="interestGenes"><b>Genes</b></label> <input type="text" name="interestGenes" value="" />
+			<br>
+			<label for="interestDomains"><b>Domains</b>:</label> <input type="text" name="interestDomains" value="" />
+			<br>
+			<label for="interestRegEles"><b>Reg Eles</b>:</label> <input type="text" name="interestRegEles" value="" />
+			<br>
+			<label for="interestBiotype"><b>Biotype Filtering:</b></label>
+			<select name="interestBiotype">
+			<option value="none">No biotype Filtering</option>
+			<option value="protein_coding">Protein Coding</option>
+			<option value="non_coding">Non-Coding</option>
+			<option value="pseudogene">Pseudogene</option>
+			</select>
+		</div>
+		<br>
+		<!-- Extra options for fusionpoint sorting -->
+		<div class="options" align="center">
+		<i>Adjust the points given to genomic features and found user-definitions, this will adjust how the fusionpoints are later sorted in the display.</i><br>
+		<br><i>There is a distinction between "real" fusiongenes and "possible" fusiongenes, the frame will only be truly calculated for confirmed breakpoints(breakStart == breakEnd).
+		Else it will only be checked if the orientation allows a fusiongene between two genebreaks and it will be designated as a possible fusiongene if it allows this.</i><br>
+		<label for="pointsInFusionGene"><b>"Real" In-frame Fusion gene:</b></label> <input type="text" name="pointsInFusionGene" value="1500"/><br>
+		<label for="pointsOutFusionGene"><b>"Real" Out-frame Fusion gene:</b></label> <input type="text" name="pointsOutFusionGene" value="1250"/><br>
+		<label for="pointsPosInFusionGene"><b>Possible fusion gene:</b></label> <input type="text" name="pointsPosInFusionGene" value="1000"/><br>
+		<label for="pointsPromotorBreak"><b>Promotor break:</b></label> <input type="text" name="pointsPromotorBreak" value="100"/><br>
+		<label for="pointsGeneBreak"><b>Gene-break (without fusiongene):</b></label> <input type="text" name="pointsGeneBreak" value="10"/><br>
+		<label for="pointsUserGene"><b>User-Genes:</b></label> <input type="text" name="pointsUserGene" value="5"/><br>
+		<label for="pointsUserDomain"><b>User-Domains:</b></label> <input type="text" name="pointsUserDomain" value="3"/><br>
+		<label for="pointsUserRegEle"><b>User-Reg. Ele.:</b></label> <input type="text" name="pointsUserDomain" value="5"/><br>
+		<label for="pointsBiotype"><b>Points biotype:</b></label> <input type="text" name="pointsBiotype" value="3"/><br>
+		</div>
+	</form>
+<br>
+<a href="http://genetics.genomicscenter.nl/FusionAnnotator/Manual-FusionAnnotator.pdf">Click for FusionAnnotator Manual</a>
+</div>
+</BODY>
+</HTML>

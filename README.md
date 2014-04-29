@@ -11,8 +11,12 @@ Additional .GFF, .BED, .WIG and .BAM/BAI support files can also be coupled to in
 
 This tool was used to visualize chromothripsis (massive DNA rearrangements affecting one or a few chromosomes due to a single large DNA shattering/repair event) in patients.
 
+**Unfortunately, large parts of this tool have not been made public and it is not able to run independently without these modules**
+
 ##Installation/setup
+- Install the Ensembl perl modules on the server where the scripts will be run	
+- Download and setup [JBrowse](http://jbrowse.org/)
 
 ##Impression Interface
 
-##Flowcharts
+![Impression FusionAnnotator](documentation/impressionFusionAnnotator.png)

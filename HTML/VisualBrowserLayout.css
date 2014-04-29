@@ -1,0 +1,179 @@
+<style type="text/css">
+/* 
+Author: 		Job van Riet
+Date of creation:	18/9/12
+Data of modification:	18/9/12
+Known bugs:		None
+Function:		CSS file for use with the breakpoint-visualization tool
+*/
+
+/* CSS code for the horizontal menu bar */
+.horizontalMenu {
+	margin:0px;padding:0px;
+	border:1px solid #000000;
+	border-top-right-radius:25px;
+	border-top-left-radius:25px;
+
+}.horizontalMenu table{
+	position:relative;
+	width:80%;
+	left:10%;
+	height:20px;
+	margin:0px;
+	padding:0px;
+}
+
+.horizontalMenu table tr:first-child td:first-child {
+	border-top-left-radius:25px;
+}
+
+.horizontalMenu table tr:first-child td:last-child {
+	border-top-right-radius:25px;
+}
+.horizontalMenu td{
+	vertical-align:middle;	
+	border:1px solid #000000;
+	border-width:0px 1px 1px 0px;
+	text-align:left;
+	padding:5px;
+	font-size:10px;
+}
+
+.horizontalMenu tr:first-child td{
+	background-color:#ff7f00;
+	border:0px solid #000000;
+	text-align:center;
+	border-width:0px 0px 1px 1px;
+	font-size:16px;
+	font-family:Helvetica;
+	font-weight:bold;
+	color:#ffffff;
+}
+
+/* CSS code for the layout of the content div */
+div.content{
+	position:relative;
+	top:5px;
+	left:+10%;
+	width:79%;
+	
+	padding:5px;
+	border:2px solid grey;
+	margin:0px;
+	background-color:#FFFFFF;
+	
+	font-size:14px;
+	font-weight:italic;
+	text-align:left;
+}
+
+/* CSS code for the layout of the options div */
+div.options{
+	position:relative;
+	border:2px solid black;
+	left:+25%;
+	width:50%;
+}
+
+/* CSS code for the layout of the fusionpoints table */
+.fusionTable table{
+	width:100%;
+	margin:0px;padding:0px;
+
+}.fusionTable tr:hover:nth-child(n+2) td{	
+background-color:#C8FE2E;
+}
+
+.fusionTable tr:first-child td{
+	font-weight:bold;
+	text-align:center;
+}
+.fusionTable tr:nth-child(odd){ background-color:#ffaa56; }
+.fusionTable tr:nth-child(even)    { background-color:#ffffff; }
+.fusionTable td{
+	vertical-align:middle;
+	border:1px solid #000000;
+	text-align:center;
+	padding:2px;
+	font-size:10px;
+	font-family:Arial;
+	font-weight:normal;
+	color:#000000;
+}
+/* CSS layout for form-labels (To correcly align multiple form elements) */
+label {
+	width:30%;
+	float:left;
+	text-align:right;
+}
+/* CSS code for the different information boxes used in the detailed overview of a selected fusionpoint*/
+div.fusionInfo{
+	position:relative;
+	top:0px;
+	left:0px;
+	
+	padding:5px;
+	border:2px solid grey;
+	margin:0px;
+	background-color:#FFFFFF;
+	
+	font-size:10px;
+	font-weight:italic;
+	text-align:left;
+}
+
+.fusionInfo td:first-child{
+	font-weight:bold;
+}
+/* CSS layout for the feature boxes and scrollable feature tables */
+div.featureInfo{
+	position:relative;
+	width:99%;
+	
+	padding:5px;
+	border:2px solid grey;
+	margin:0px;
+	background-color:#FFFFFF;
+	
+	font-size:10px;
+	font-weight:italic;
+	text-align:left;
+}
+
+/* Layout for the table used in the detailed overview */
+div.featureTable {
+	height: 20%;
+	width: 100%;
+	overflow: scroll;
+	clear: both;
+	border: 1px solid #963;
+	margin:0px;padding:0px;
+}
+
+.featureTable tr:nth-child(odd){ background-color:#ffaa56; }
+.featureTable tr:nth-child(even)    { background-color:#ffffff; }
+
+.featureTable th{
+	border: 1px solid #963;;
+	font-size:12px;
+	font-family:Arial;
+	font-weight: bold;
+	padding: 4px 3px;
+	text-align: center;
+}	
+.featureTable td{
+	vertical-align:middle;
+	border:1px solid #000000;
+	text-align:center;
+	width:25%;
+	padding:2px;
+	font-size:10px;
+	font-family:Arial;
+	font-weight:normal;
+	color:#000000;
+}
+
+.featureTable tr:hover:nth-child(n+1) td{
+	background-color:#C8FE2E;
+}
+</style>
